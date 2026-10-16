@@ -3,35 +3,38 @@ package domain;
 import java.io.Serializable;
 
 public class RespuestaMetadatos implements Serializable {
-    private String nombre;
-    private long tamanio;
+    private boolean aceptado;
+    private String motivo;
 
-    public RespuestaMetadatos(String nombre, long tamanio) {
-        this.nombre = nombre;
-        this.tamanio = tamanio;
+    public boolean isAceptado() {
+        return aceptado;
     }
 
-    public String getNombre() {
-        return nombre;
+    public void setAceptado(boolean aceptado) {
+        this.aceptado = aceptado;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public String getMotivo() {
+        return motivo;
     }
 
-    public long getTamanio() {
-        return tamanio;
-    }
-
-    public void setTamanio(long tamanio) {
-        this.tamanio = tamanio;
+    public void setMotivo(String motivo) {
+        this.motivo = motivo;
     }
 
     @Override
     public String toString() {
         return "RespuestaMetadatos{" +
-                "nombre='" + nombre + '\'' +
-                ", tamanio=" + tamanio +
+                "aceptado=" + aceptado +
+                ", motivo='" + motivo + '\'' +
                 '}';
+    }
+
+    public RespuestaMetadatos(boolean aceptado, String motivo) {
+        this.aceptado = aceptado;
+        this.motivo = motivo;
+
+
+
     }
 }

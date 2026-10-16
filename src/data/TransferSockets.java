@@ -1,78 +1,75 @@
 package data;
 
-import domain.FileTransfer;
-import domain.PeticionAuth;
-import domain.RespuestaAuth;
-import domain.RespuestaMetadatos;
+import domain.*;
 
 import java.io.*;
 import java.net.Socket;
 
 public class TransferSockets implements FileTransfer {
 
-    private DataOutputStream dOut;
     private ObjectOutputStream ObjOut;
-    private  ObjectInputStream ObjInt;
+    private ObjectInputStream ObjInt;
 
     public TransferSockets(Socket socket) throws IOException {
-        dOut = new DataOutputStream(socket.getOutputStream());
-        ObjOut=new ObjectOutputStream(socket.getOutputStream());
-        ObjInt=new ObjectInputStream(socket.getInputStream());
-    }
-
-
-
-
-    @Override
-    public void sendMeta(String path) throws IOException {
-        File file = new File(path);
-
-        dOut.writeLong(file.length());
-        dOut.flush();
-
-
-        dOut.writeUTF(file.getName());
-        dOut.flush();
-
-    }
-
-    @Override
-    public void sendBody(String path) throws IOException {
-        byte[] buffer = new byte[8 * 1024];
-        File fichero = new File(path);
-
-        try (FileInputStream fileInputStream = new FileInputStream(fichero)) {
-            int longitud = 0;
-            while((longitud=fileInputStream.read(buffer,0,buffer.length))!=-1){
-               dOut.write(buffer,0,longitud);
-            }
-
-            dOut.flush();
-
-
-        }
+        ObjOut = new ObjectOutputStream(socket.getOutputStream());
+        ObjOut.flush();
+        ObjInt = new ObjectInputStream(socket.getInputStream());
     }
 
 
     @Override
-    public void receiveObjectPeticionAuth() throws IOException{
-        PeticionAuth pauth= (PeticionAuth) ObjInt.readObject();
+    public PeticionAuth receiveObjectPeticionAuth() throws IOException, ClassNotFoundException {
+        return (PeticionAuth) ObjInt.readObject();
     }
 
     @Override
-    public void  sendObjectAuth(RespuestaAuth auth) throws  IOException{
-
+    public void sendObjectAuth(RespuestaAuth auth) throws IOException {
 
         ObjOut.writeObject(auth);
         ObjOut.flush();
     }
 
     @Override
-    public void sendObjectMetadatos(RespuestaMetadatos metadatos) throws IOException{
+    public MetadatosFichero receiveObjectMetaDatosFichero() throws IOException, ClassNotFoundException {
+        return (MetadatosFichero) ObjInt.readObject();
+    }
 
-        //este objeto va atener el  nombr y el tamaño del fichero del tamaño q quiero enviar
+    @Override
+    public void sendObjectMetadatos(RespuestaMetadatos metadatos) throws IOException {
+
         ObjOut.writeObject(metadatos);
         ObjOut.flush();
     }
+
+    @Override
+    public void receiveBody(MetadatosFichero metadatosFichero, String directory) throws IOException {
+        byte[] buffer = new byte[8 * 1024];
+
+        File carpeta = new File(directory);
+
+        if (!carpeta.exists() && !carpeta.mkdirs()) {
+            throw new IOException("No se pudo crear el directorio");
+        }
+
+        File file = new File(carpeta, metadatosFichero.getNombre());
+        try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+            long size = metadatosFichero.getTamanio();
+            while (size > 0) {
+
+                int longitud = ObjInt.read(buffer, 0, (int) Math.min(buffer.length, size));
+
+                if (longitud == -1) {
+                    throw new EOFException("El fichero se ha recibido incompleto");
+                }
+
+                fileOutputStream.write(buffer, 0, longitud);
+                size -= longitud;
+
+            }
+            fileOutputStream.flush();
+        }
+
+    }
+
 
 }

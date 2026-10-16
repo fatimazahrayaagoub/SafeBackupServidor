@@ -3,35 +3,37 @@ package domain;
 import java.io.Serializable;
 
 public class PeticionAuth implements Serializable {
-    private boolean exito;
-    private  String mensaje;
+    private String usuario;
+    private  String contrasenia;
 
-    public PeticionAuth(boolean exito, String mensaje) {
-        this.exito = exito;
-        this.mensaje = mensaje;
+    public String getUsuario() {
+        return usuario;
     }
 
-    public boolean isExito() {
-        return exito;
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
     }
 
-    public String getMensaje() {
-        return mensaje;
+    public String getContrasenia() {
+        return contrasenia;
     }
 
-    public void setExito(boolean exito) {
-        this.exito = exito;
-    }
-
-    public void setMensaje(String mensaje) {
-        this.mensaje = mensaje;
+    public void setContrasenia(String contrasenia) {
+        this.contrasenia = contrasenia;
     }
 
     @Override
     public String toString() {
         return "PeticionAuth{" +
-                "exito=" + exito +
-                ", mensaje='" + mensaje + '\'' +
+                "usuario='" + usuario + '\'' +
+                ", contrasenia='" + contrasenia + '\'' +
                 '}';
+    }
+
+    public PeticionAuth(String usuario, String contrasenia) {
+        this.usuario = usuario;
+        this.contrasenia = contrasenia;
+
+
     }
 }
