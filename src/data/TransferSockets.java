@@ -43,6 +43,7 @@ public class TransferSockets implements FileTransfer {
 
     @Override
     public void receiveBody(MetadatosFichero metadatosFichero, String directory) throws IOException {
+
         byte[] buffer = new byte[8 * 1024];
 
         File carpeta = new File(directory);
@@ -54,11 +55,15 @@ public class TransferSockets implements FileTransfer {
         File file = new File(carpeta, metadatosFichero.getNombre());
         try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
             long size = metadatosFichero.getTamanio();
+
+            System.out.println("Nombre: " + metadatosFichero.getNombre());
+            System.out.println("Tamaño esperado: " + size);
             while (size > 0) {
 
                 int longitud = ObjInt.read(buffer, 0, (int) Math.min(buffer.length, size));
 
                 if (longitud == -1) {
+                    System.out.println("Faltan por recibir: " + size + " bytes");
                     throw new EOFException("El fichero se ha recibido incompleto");
                 }
 
