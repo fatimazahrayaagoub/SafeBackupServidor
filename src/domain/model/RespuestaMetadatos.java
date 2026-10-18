@@ -1,4 +1,4 @@
-package domain;
+package domain.model;
 
 import java.io.Serializable;
 
@@ -6,6 +6,13 @@ public class RespuestaMetadatos implements Serializable {
     private boolean aceptado;
     private String motivo;
 
+
+
+    public RespuestaMetadatos(boolean aceptado, String motivo) {
+        this.aceptado = aceptado;
+        this.motivo = motivo;
+
+    }
     public boolean isAceptado() {
         return aceptado;
     }
@@ -30,11 +37,4 @@ public class RespuestaMetadatos implements Serializable {
                 '}';
     }
 
-    public RespuestaMetadatos(boolean aceptado, String motivo) {
-        this.aceptado = aceptado;
-        this.motivo = motivo;
-
-
-
-    }
 }

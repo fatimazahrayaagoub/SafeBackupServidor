@@ -1,4 +1,9 @@
-package domain;
+package domain.repository;
+
+import domain.model.MetadatosFichero;
+import domain.model.PeticionAuth;
+import domain.model.RespuestaAuth;
+import domain.model.RespuestaMetadatos;
 
 import java.io.IOException;
 

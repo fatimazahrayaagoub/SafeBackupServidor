@@ -1,6 +1,10 @@
 package data;
 
-import domain.*;
+import domain.model.MetadatosFichero;
+import domain.model.PeticionAuth;
+import domain.model.RespuestaAuth;
+import domain.model.RespuestaMetadatos;
+import domain.repository.FileTransfer;
 
 import java.io.*;
 import java.net.Socket;
